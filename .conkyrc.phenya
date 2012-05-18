@@ -1,0 +1,62 @@
+update_interval 1
+double_buffer yes
+alignment top_left
+gap_x 227
+gap_y -1
+maximum_width 1920
+# --- Шрифт --- #
+font fixed:size=8:medium
+use_xft yes
+draw_shades yes
+draw_outline no
+# --- Цвета --- #
+#~ default_color cccccc
+color0 cccccc	# текст по умолчанию
+color1 ffbbbb	# температура
+color2 white	# рамки графиков
+color3 48B3C9	# загрузка дисков
+color4 dddddd	# (серый на голубом)
+color5 000000	#
+color6 000000	#
+color7 000000	#
+color8 000000	#
+color9 000000	#
+
+TEXT
+${color2}${cpugraph cpu1 25,56 000000 D6272D} ${cpugraph cpu2 25,56 000000 D6272D} ${cpugraph cpu3 25,56 000000 D6272D} ${cpugraph cpu4 25,56 000000 D6272D} ${color 50A149}${memgraph 25,56 000000 50A149} ${color A6298E}${swapbar 25,56}$color ${color2}${downspeedgraph eth0 25,56 000000 73D025} ${upspeedgraph eth0 25,56 000000 E63F7A}$color ${color2}${downspeedgraph lo 25,56 000000 73D025} ${upspeedgraph lo 25,56 000000 E63F7A}$color                                        ${color2}${diskiograph /dev/sda 25,56 000000 48B3C9} ${color3}${fs_bar 25,56 /home} ${color3}${fs_bar 25,56 /} ${color3}${fs_bar 25,56 /usr} ${color3}${fs_bar 25,56 /var} ${color3}${fs_bar 25,56 /tmp} ${color2}${diskiograph /dev/sdb 25,56 000000 48B3C9} ${color3}${fs_bar 25,56 /mnt/80G}${color0}
+${voffset -33}${offset 11}${execi 1 sensors | grep Vcore | sed 's~[^0-9]*\([01]\.[0-9]*\).*~\1~'} V
+${voffset 1}${offset 4}$uptime_short
+${color1}${voffset -25}${offset 70}${execi 1 sensors | grep temp1 | sed 's~[^+]*\(\+[0-9.]*..\).*~\1~'}${color0}
+${voffset 1}${offset 67}${freq_g} GHz
+${voffset -25}${offset 129}${execi 1 sensors | grep CPU\ FAN | sed 's~[^0-9]*\([0-9]*\).*~\1~'} RPM
+${voffset 1}${offset 127}ps:$running_processes/$processes
+${color1}${voffset -25}${offset 188}mb:${execi 1 sensors | grep "MB Temperature" | sed 's~[^+]*+\([0-9.]*..\).*~\1~'}${color0}
+${color1}${voffset 1}${offset 188}nv:+${execi 1 nvidia-smi -a | grep Gpu | sed 's~[^0-9]*\([0-9]*\).*~\1~' | grep -E '[0-9]'}°C${color0}
+${voffset -25}${offset 249}nvfan:${execi 1 nvidia-smi -a | grep Fan\ Speed | sed 's~[^0-9]*\([0-9]*\).*~\1~'}%
+${voffset 1}${offset 250}${execi 1 nvidia-smi -a | grep Free | sed 's~[^0-9]*\([0-9]*\).*~\1~'}/${execi 1 nvidia-smi -a | grep Total | sed 's~[^0-9]*\([0-9]*\).*~\1~' | grep -E '[0-9]'}MB
+${voffset -25}${offset 315}${execi 1 sensors | grep "CHASSIS FAN Speed" | sed 's~[^:]*:[^0-9]*\([0-9]*\).*~\1~'} RPM
+${voffset 1}${offset 315}${execi 1 sensors | grep "CHASSIS FAN 2 Speed" | sed 's~[^:]*:[^0-9]*\([0-9]*\).*~\1~'} RPM
+${voffset -25}${offset 379}${color cccc77}${execi 1 /sbin/ifconfig eth0 | grep inet\ addr | sed 's~[^0-9]*\([0-9]*\.[0-9]*\.\).*~\1~'}${color0}
+${voffset 1}${offset 376}${execi 1 /sbin/ifconfig eth0 | grep RX\ bytes | sed 's~[^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset -25}${offset 436}${color cccc77}${execi 1 /sbin/ifconfig eth0 | grep inet\ addr | sed 's~[^0-9]*[0-9]*\.[0-9]*\(\.[0-9]*\.[0-9]*\).*~\1~'}${color0}
+${voffset 1}${offset 438}${execi 1 /sbin/ifconfig eth0 | grep RX\ bytes | sed 's~[^(]*([^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset -25}${offset 505}${color ffcc77}${execi 1 /sbin/ifconfig lo | grep inet\ addr | sed 's~[^0-9]*\([0-9]*\.[0-9]*\.\).*~\1~'}${color0}
+${voffset 1}${offset 500}${execi 1 /sbin/ifconfig lo | grep RX\ bytes | sed 's~[^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset -25}${offset 560}${color ffcc77}${execi 1 /sbin/ifconfig lo | grep inet\ addr | sed 's~[^0-9]*[0-9]*\.[0-9]*\(\.[0-9]*\.[0-9]*\).*~\1~'}${color0}
+${voffset 1}${offset 562}${execi 1 /sbin/ifconfig lo | grep RX\ bytes | sed 's~[^(]*([^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset -25}${offset 858}${color ccccff}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sda~~' | cut -d\| -f2 | sed 's~ ~\n~' | tail -n1 | sed 's~\(.........\).*~\1~'}${color0}
+${color1}${voffset 1}${offset 870}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sda~~' | cut -d\| -f3}°C${color4}
+${voffset -25}${offset 930}/home
+${voffset 1}${offset 920}${fs_free /home}
+${voffset -25}${offset 1005}/
+${voffset 1}${offset 990}${fs_free /}
+${voffset -25}${offset 1055}/usr
+${voffset 1}${offset 1043}${fs_free /usr}
+${voffset -25}${offset 1120}/var
+${voffset 1}${offset 1110}${fs_free /var}
+${voffset -25}${offset 1180}/tmp
+${voffset 1}${offset 1172}${fs_free /tmp}
+${voffset -25}${offset 1228}${color ccccff}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sdb~~' | cut -d\| -f2 | sed 's~ ~\n~' | tail -n1 | sed 's~\(.........\).*~\1~'}${color0}
+${color1}${voffset 1}${offset 1243}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sdb~~' | cut -d\| -f3}°C${color4}
+${voffset -25}${offset 1293}/mnt/80G
+${voffset 1}${offset 1295}${fs_free /mnt/80G}

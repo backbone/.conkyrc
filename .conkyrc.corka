@@ -1,0 +1,46 @@
+update_interval 1
+double_buffer yes
+alignment top_left
+gap_x 227
+gap_y -1
+maximum_width 1920
+# --- Шрифт --- #
+font fixed:size=8:medium
+use_xft yes
+draw_shades yes
+draw_outline no
+# --- Цвета --- #
+#~ default_color cccccc
+color0 cccccc	# текст по умолчанию
+color1 ffbbbb	# температура
+color2 white	# рамки графиков
+color3 48B3C9	# загрузка дисков
+color4 dddddd	# (серый на голубом)
+color5 000000	#
+color6 000000	#
+color7 000000	#
+color8 000000	#
+color9 000000	#
+
+TEXT
+${color2}${cpugraph cpu1 25,56 000000 D6272D} ${cpugraph cpu2 25,56 000000 D6272D} ${cpugraph cpu3 25,56 000000 D6272D} ${cpugraph cpu4 25,56 000000 D6272D} ${color 50A149}${memgraph 25,44 000000 50A149}${color A6298E}${swapbar 25,44}$color                                        ${color FAFF87}${downspeedgraph eth0 25,56 000000 90F23D}${offset -56}${upspeedgraph eth0 25,56 000000 E63F7A} ${color FFB558}${downspeedgraph wlan0 25,56 000000 90F23D}${offset -56}${upspeedgraph wlan0 25,56 000000 E63F7A} ${color2}${diskiograph /dev/sda 25,56 000000 48B3C9} ${color3}${fs_bar 25,48 /home} ${color3}${fs_bar 25,48 /tmp}
+${color1}${voffset -33}${offset 11}${execi 1 sensors | grep Core\ 0 | sed 's~[^+]*\(\+[0-9.]*..\).*~\1~'}${color0}
+${voffset 1}${offset 4}$uptime_short
+${color1}${voffset -25}${offset 70}${execi 1 sensors | grep Core\ 2 | sed 's~[^+]*\(\+[0-9.]*..\).*~\1~'}${color0}
+${voffset 1}${offset 67}${freq_g} GHz
+${voffset -25}${offset 129}NvOp:${execi 1 [ -f /tmp/.X8293-lock ] && echo "ON" || echo "off"}
+${voffset 1}${offset 127}ps:$running_processes/$processes
+${voffset -25}${offset 188}Batt:${execi 1 acpi | sed 's~.*[^0-9]\([0-9]*%\).*$~\1~'}
+${voffset 1}${offset 190}${execi 1 acpi | sed 's~.*%~~ ; s~[^0-9]*\([0-9]*:[0-9]*:[0-9]*\).*~\1~'}
+${voffset -25}${offset 252}${color FAFF87}${addr eth0}
+${voffset 1}${offset 252}${color FFB558}${addr wlan0}
+${voffset -25}${offset 581}${color E5FCD1}${execi 1 /sbin/ifconfig eth0 | grep RX\ bytes | sed 's~[^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset 1}${offset 581}${color FCD1D3}${execi 1 /sbin/ifconfig eth0 | grep RX\ bytes | sed 's~[^(]*([^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset -25}${offset 642}${color E5FCD1}${execi 1 /sbin/ifconfig wlan0 | grep RX\ bytes | sed 's~[^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset 1}${offset 642}${color FCD1D3}${execi 1 /sbin/ifconfig wlan0 | grep RX\ bytes | sed 's~[^(]*([^(]*(\([0-9.]*\ .\).*~\1~'}B
+${voffset -25}${offset 702}${color ccccff}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sda~~' | cut -d\| -f2 | sed 's~ ~\n~' | tail -n1 | sed 's~\(.........\).*~\1~'}${color0}
+${voffset 1}${offset 719}${color1}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sda~~' | cut -d\| -f3}°C${color4}
+${voffset -25}${offset 770}/home
+${voffset 1}${offset 768}${fs_free /home}
+${voffset -25}${offset 826}/tmp
+${voffset 1}${offset 820}${fs_free /tmp}
