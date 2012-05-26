@@ -37,9 +37,9 @@ ${voffset 1}${offset 250}${execi 1 nvidia-smi -a | grep Free | sed 's~[^0-9]*\([
 ${voffset -25}${offset 315}${execi 1 sensors | grep "CHASSIS1 FAN Speed" | sed 's~[^:]*:[^0-9]*\([0-9]*\).*~\1~'} RPM
 ${voffset 1}${offset 315}${execi 1 sensors | grep "POWER FAN Speed" | sed 's~[^:]*:[^0-9]*\([0-9]*\).*~\1~'} RPM
 ${voffset -25}${offset 379}${color cccc77}${execi 1 /sbin/ifconfig eth0 | grep inet\ addr | sed 's~[^0-9]*\([0-9]*\.[0-9]*\.\).*~\1~'}${color0}
-${voffset 1}${offset 382}${execi 60 sudo iptables -t mangle -L -v | sed -n '/Chain IN-INTERNET/N ; //N ; //p' | tail -n1 | sed 's~ *[^ ]\+ *\([^ ]\+\).*~\1~'}B
+${voffset 1}${offset 382}${execi 60 sudo iptables -t mangle -L IN-INTERNET -v | tail -n1 | sed 's~ *[^ ]\+ *\([^ ]\+\).*~\1~'}B
 ${voffset -25}${offset 436}${color cccc77}${execi 1 /sbin/ifconfig eth0 | grep inet\ addr | sed 's~[^0-9]*[0-9]*\.[0-9]*\(\.[0-9]*\.[0-9]*\).*~\1~'}${color0}
-${voffset 1}${offset 444}${execi 60 sudo iptables -t mangle -L -v | sed -n '/Chain OUT-INTERNET/N ; //N ; //p' | tail -n1 | sed 's~ *[^ ]\+ *\([^ ]\+\).*~\1~'}B
+${voffset 1}${offset 444}${execi 60 sudo iptables -t mangle -L OUT-INTERNET -v | tail -n1 | sed 's~ *[^ ]\+ *\([^ ]\+\).*~\1~'}B
 ${voffset -25}${offset 732}${color aaffff}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sda~~' | cut -d\| -f2 | sed 's~ ~\n~' | tail -n1 | sed 's~\(.........\).*~\1~'}${color0}
 ${color1}${voffset 1}${offset 747}${execi 1 nc localhost 7634 2>/dev/null | sed 's~.*sda~~' | cut -d\| -f3}°C${color4}
 ${voffset -25}${offset 804}/home
